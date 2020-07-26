@@ -1,15 +1,22 @@
 #include <iostream> //iostream is header file -> preprocessor directive
+#include <ctime>
 
-
-int main()
+void PrintIntroduction(int Difficulty)
 {
-    std::cout << "\nYou are a top hacker breaking into a secure server!"; //expression statements
+    std::cout << "\nWelcome to Triple X!\n";
+    std::cout << "\nYou are a top hacker breaking into a level " << Difficulty;
+    std::cout << " secure server!"; //expression statements
     std::cout << std::endl; //gives a blank line
     std::cout << "\nEnter the correct codes to continue...\n";
-    
-    const int CodeA = 4; //declaration statements -> declares something
-    const int CodeB = 7;
-    const int CodeC = 2;
+}
+
+bool PlayGame(int Difficulty) //void means it returns nothing
+{
+    PrintIntroduction(Difficulty);
+
+    const int CodeA = rand() % Difficulty + Difficulty; //declaration statements -> declares something
+    const int CodeB = rand() % Difficulty + Difficulty;
+    const int CodeC = rand() % Difficulty + Difficulty;
 
     const int CodeSum = CodeA + CodeB + CodeC;
     const int CodeProduct = CodeA * CodeB * CodeC;
@@ -19,26 +26,46 @@ int main()
     std::cout << "+ The codes add up to: " << CodeSum << std::endl;
     std::cout << "+ The product of the codes are: " << CodeProduct << std::endl << std::endl; 
 
+    //Store player guess
     int GuessA, GuessB, GuessC;
     std::cout << std::endl;
 
-    std::cin >> GuessA; //extract from input stream and assign to var:PlayerGuess
-    std::cin >> GuessB; 
-    std::cin >> GuessC; 
-    
+    std::cin >> GuessA >> GuessB >> GuessC; //extract from input stream and assign to var:PlayerGuess
+
     int GuessSum = GuessA + GuessB + GuessC;
     int GuessProduct = GuessA * GuessB * GuessC;
 
-    if(GuessSum == CodeSum){
-        std::cout << std::endl << "+ You win!" << std::endl;
+    if(GuessSum == CodeSum && GuessProduct == CodeProduct){
+        std::cout << std::endl << "*** Way to go! You've extracted some data. Keep going! ***\n";
+        return true;
     } else {
-        std::cout << std::endl << "+ Sorry, you lose :(" << std::endl;
+        std::cout << std::endl << "*** You entered the wrong code! Try again! ***\n";\
+        return false;
     }
 
-    std::cout << std::endl;
-    std::cout << "+ The sum of your guesses are: " << GuessSum << std::endl;
+    std::cout << "\n+ The sum of your guesses are: " << GuessSum << std::endl;
     std::cout << "+ The product of your guesses are: " << GuessProduct << std::endl << std::endl;
 
+}
+
+int main()
+{   
+    srand(time(NULL)); //creates new random seq based on the time of day
+    int LevelDifficulty = 1;
+    const int MaxLevel = 10; 
+
+    while(LevelDifficulty <= MaxLevel) //Loop game until all levels are completed
+    {
+        bool bLevelComplete = PlayGame(LevelDifficulty);
+        std::cin.clear(); //Clears any errors
+        std::cin.ignore(); //Discards the buffer
+
+        if(bLevelComplete)
+        {
+            ++LevelDifficulty;
+        }
+    }
+    std::cout << "\n*** Congratulations! You've beat Triple X! ***";
 
     return 0;
 }
